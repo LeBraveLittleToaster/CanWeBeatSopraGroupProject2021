@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public float moveSpeed = 1f;
+    public float moveSpeed = 5f;
 
     public float zoomSpeed = 5.0f;
     public float zoomFactor = 1.0f;
@@ -16,40 +16,63 @@ public class CameraScript : MonoBehaviour
 
     private Camera cam;
 
+    private Vector3 oldMousePos;
+
     // Start is called before the first frame update
     void Start()
     {
         this.cam = GetComponent<Camera>();
         origionalSize = this.cam.orthographicSize;
+        oldMousePos = Input.mousePosition;
     }
 
     // Update is called once per frame
     void Update()
     {
         doZoom();
-
+        doMoveWASD();
+        doMouseDrag();
     }
 
-    private void doMove()
+    private void doMouseDrag()
+    {
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("Setting default");
+            oldMousePos = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(1))
+        {
+            Vector3 curDelta = oldMousePos - Input.mousePosition;
+            Debug.Log(curDelta);
+            this.transform.Translate(new Vector3(curDelta.x, curDelta.y, 0) * (moveSpeed * (2 * zoomFactor) )* Time.deltaTime, Space.World);
+            oldMousePos = Input.mousePosition;
+        }
+        
+        
+    }
+
+    private void doMoveWASD()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            this.cam.transform.Translate(new Vector3(-1, 0, 0) * moveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(new Vector3(-1, 0, 0) * moveSpeed * Time.deltaTime, Space.World);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            this.cam.transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime, Space.World);
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            this.cam.transform.Translate(new Vector3(0, 1, 0) * moveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(new Vector3(0, 1, 0) * moveSpeed * Time.deltaTime, Space.World);
         }
 
         if (Input.GetKey(KeyCode.S))
         {
-            this.cam.transform.Translate(new Vector3(0, -1, 0) * moveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(new Vector3(0, -1, 0) * moveSpeed * Time.deltaTime, Space.World);
         }
 
     }
