@@ -7,16 +7,20 @@ public class CameraScript : MonoBehaviour
     public float moveSpeed = 5f;
 
     public float zoomSpeed = 5.0f;
-    public float zoomFactor = 1.0f;
+    public float zoomFactor = 3.0f;
 
-    public float minZoomF = 0.1f;
-    public float maxZoomF = 5f;
+    public float minZoomF = .5f;
+    public float maxZoomF = 10f;
+
+    public float centeringSpeed = 50f;
 
     private float origionalSize = 0f;
 
     private Camera cam;
 
     private Vector3 oldMousePos;
+    private bool isInTransition = false;
+    private Vector3 transitionGoalPos = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -30,8 +34,36 @@ public class CameraScript : MonoBehaviour
     void Update()
     {
         doZoom();
-        doMoveWASD();
-        doMouseDrag();
+        if (!isInTransition)
+        {
+            Debug.Log("Before: " + transform.position);
+            doMoveWASD();
+            doMouseDrag();
+            Debug.Log("After: " + transform.position);
+        }
+        else
+        {
+            isInTransition = doTransition();
+        }
+
+        
+
+    }
+
+    private bool doTransition()
+    {
+        float step = centeringSpeed * Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, transitionGoalPos, Time.deltaTime * centeringSpeed);
+
+        return Vector3.Distance(transform.position, transitionGoalPos) > 0.1f;
+    }
+
+    public void SetCameraToMapMiddle(int x, int y)
+    {
+        isInTransition = true;
+        transitionGoalPos = new Vector3(x / 2, y / 2, transform.position.z);
+        zoomFactor = Mathf.Clamp((Mathf.Max(x, y) / 10), minZoomF, maxZoomF);
+        Debug.Log("Transitioning");
     }
 
     private void doMouseDrag()
