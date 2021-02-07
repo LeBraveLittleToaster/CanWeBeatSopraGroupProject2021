@@ -174,7 +174,7 @@ public class TileMapScript : MonoBehaviour
         {
             PaintTile(oldHighlightPos, null, mapHighlight);
         }
-        if(selectedTilePos.x >= 0 && selectedTilePos.x < mapData.GetLength(0) && selectedTilePos.y >= 0 && selectedTilePos.y < mapData.GetLength(1))
+        if(selectedTilePos != null && selectedTilePos.x >= 0 && selectedTilePos.x < mapData.GetLength(0) && selectedTilePos.y >= 0 && selectedTilePos.y < mapData.GetLength(1))
         {
             PaintTile(selectedTilePos, highlightTile, mapHighlight);
             oldHighlightPos = selectedTilePos;
