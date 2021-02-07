@@ -36,10 +36,8 @@ public class CameraScript : MonoBehaviour
         doZoom();
         if (!isInTransition)
         {
-            Debug.Log("Before: " + transform.position);
             doMoveWASD();
             doMouseDrag();
-            Debug.Log("After: " + transform.position);
         }
         else
         {
@@ -71,7 +69,6 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log("Setting default");
             oldMousePos = Input.mousePosition;
         }
         if (Input.GetMouseButton(1))
